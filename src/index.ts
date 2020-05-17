@@ -1,11 +1,11 @@
-// import { User } from './models/User';
+import { User } from './models/User';
 
-// const user = new User({ name: 'Aman', age: 22 });
+const user = new User({ name: 'Aman', age: 22 });
 
-// user.save();
+console.log(user.get('name'));
 
-// user.events.on('change', () => {
-//     console.log('change');
-// });
+user.on('change', () => {
+    console.log('name changed');
+});
 
-// user.events.trigger('change');
+user.trigger('change');
