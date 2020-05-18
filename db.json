@@ -1,8 +1,20 @@
 {
-  "users": [
-    {
-      "id": 1,
-      "name": "new Name"
-    }
-  ]
+    "users": [
+        {
+            "id": 1,
+            "name": "Rakesh"
+        },
+        {
+            "id": 2,
+            "name": "Rajesh"
+        },
+        {
+            "id": 3,
+            "name": "Aman"
+        },
+        {
+            "id": 4,
+            "name": "Dhruuv"
+        }
+    ]
 }
