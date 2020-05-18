@@ -117,18 +117,18 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"src/views/UserForm.ts":[function(require,module,exports) {
+})({"src/views/View.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.UserForm = void 0;
+exports.View = void 0;
 
-var UserForm =
+var View =
 /** @class */
 function () {
-  function UserForm(parent, model) {
+  function View(parent, model) {
     var _this = this;
 
     this.parent = parent;
@@ -138,32 +138,6 @@ function () {
       _this.model.on('change', function () {
         _this.render();
       });
-    };
-
-    this.eventMap = function () {
-      return {
-        'click:.set-age': _this.onSetAge,
-        'click:.set-name': _this.onSetName
-      };
-    };
-
-    this.onSetAge = function () {
-      _this.model.setRandomAge();
-    };
-
-    this.onSetName = function () {
-      var input = _this.parent.querySelector('input');
-
-      if (input) {
-        var name = input.value;
-        if (name) _this.model.set({
-          name: name
-        });
-      }
-    };
-
-    this.template = function () {
-      return "\n      <div>\n        <h1>User Form </h1>\n        <h1>Name: " + _this.model.get('name') + " </h1>\n        <h1>Age: " + _this.model.get('age') + " </h1>\n        <input type=\"text\"/>\n        <button class=\"set-name\">Set Name</button>\n        <button class=\"set-age\">Random age</button>\n      </div>\n    \n    ";
     };
 
     this.bindEvents = function (fragment) {
@@ -197,11 +171,91 @@ function () {
     this.renderOnChange();
   }
 
-  return UserForm;
+  return View;
 }();
 
+exports.View = View;
+},{}],"src/views/UserForm.ts":[function(require,module,exports) {
+"use strict";
+
+var __extends = this && this.__extends || function () {
+  var _extendStatics = function extendStatics(d, b) {
+    _extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function (d, b) {
+      d.__proto__ = b;
+    } || function (d, b) {
+      for (var p in b) {
+        if (b.hasOwnProperty(p)) d[p] = b[p];
+      }
+    };
+
+    return _extendStatics(d, b);
+  };
+
+  return function (d, b) {
+    _extendStatics(d, b);
+
+    function __() {
+      this.constructor = d;
+    }
+
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+}();
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.UserForm = void 0;
+
+var View_1 = require("./View");
+
+var UserForm =
+/** @class */
+function (_super) {
+  __extends(UserForm, _super);
+
+  function UserForm() {
+    // constructor(protected parent: Element, protected model: User) {
+    //     this.renderOnChange();
+    // }
+    var _this = _super !== null && _super.apply(this, arguments) || this;
+
+    _this.eventMap = function () {
+      return {
+        'click:.set-age': _this.onSetAge,
+        'click:.set-name': _this.onSetName
+      };
+    };
+
+    _this.onSetAge = function () {
+      _this.model.setRandomAge();
+    };
+
+    _this.onSetName = function () {
+      var input = _this.parent.querySelector('input');
+
+      if (input) {
+        var name = input.value;
+        if (name) _this.model.set({
+          name: name
+        });
+      }
+    };
+
+    _this.template = function () {
+      return "\n      <div>\n        <h1>User Form </h1>\n        <h1>Name: " + _this.model.get('name') + " </h1>\n        <h1>Age: " + _this.model.get('age') + " </h1>\n        <input type=\"text\"/>\n        <button class=\"set-name\">Set Name</button>\n        <button class=\"set-age\">Random age</button>\n      </div>\n    \n    ";
+    };
+
+    return _this;
+  }
+
+  return UserForm;
+}(View_1.View);
+
 exports.UserForm = UserForm;
-},{}],"src/models/Model.ts":[function(require,module,exports) {
+},{"./View":"src/views/View.ts"}],"src/models/Model.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2120,22 +2174,6 @@ exports.ApiSync = ApiSync;
 },{"axios":"node_modules/axios/index.js"}],"src/models/Attribute.ts":[function(require,module,exports) {
 "use strict"; // import { UserProps } from './User';
 
-var __assign = this && this.__assign || function () {
-  __assign = Object.assign || function (t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-      s = arguments[i];
-
-      for (var p in s) {
-        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-      }
-    }
-
-    return t;
-  };
-
-  return __assign.apply(this, arguments);
-};
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -2154,7 +2192,8 @@ function () {
     };
 
     this.set = function (update) {
-      _this.data = __assign(__assign({}, _this.data), update); // Object.assign(this.data, update);
+      // this.data = { ...this.data, ...update };
+      Object.assign(_this.data, update);
     };
   }
 
@@ -2361,7 +2400,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52539" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53386" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

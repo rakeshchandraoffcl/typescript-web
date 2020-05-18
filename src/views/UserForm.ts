@@ -1,15 +1,10 @@
-import { User } from '../models/User';
+import { View } from './View';
+import { User, UserProps } from '../models/User';
 
-export class UserForm {
-    constructor(private parent: Element, private model: User) {
-        this.renderOnChange();
-    }
-
-    renderOnChange = (): void => {
-        this.model.on('change', () => {
-            this.render();
-        });
-    };
+export class UserForm extends View<User, UserProps> {
+    // constructor(protected parent: Element, protected model: User) {
+    //     this.renderOnChange();
+    // }
 
     eventMap = (): { [key: string]: () => void } => {
         return {
@@ -42,25 +37,5 @@ export class UserForm {
       </div>
     
     `;
-    };
-
-    bindEvents = (fragment: DocumentFragment): void => {
-        const events = this.eventMap();
-        for (const eventKey in events) {
-            const [event, selector] = eventKey.split(':');
-            fragment
-                .querySelectorAll(selector)
-                .forEach((element: Element): void => {
-                    element.addEventListener(event, events[eventKey]);
-                });
-        }
-    };
-
-    render = (): void => {
-        this.parent.innerHTML = '';
-        const template = document.createElement('template');
-        template.innerHTML = this.template();
-        this.bindEvents(template.content);
-        this.parent.append(template.content);
     };
 }
