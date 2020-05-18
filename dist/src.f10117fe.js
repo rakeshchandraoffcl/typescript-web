@@ -1983,6 +1983,13 @@ function () {
     };
   }
 
+  Object.defineProperty(Attribute.prototype, "getAll", {
+    get: function get() {
+      return this.data;
+    },
+    enumerable: false,
+    configurable: true
+  });
   return Attribute;
 }();
 
@@ -2010,8 +2017,35 @@ var User =
 /** @class */
 function () {
   function User(userProps) {
+    var _this = this;
+
     this.events = new Eventing_1.Eventing();
     this.sync = new Sync_1.Sync(rootUrl);
+
+    this.set = function (update) {
+      _this.attribute.set(update);
+
+      _this.events.trigger('change');
+    };
+
+    this.fetch = function () {
+      var id = _this.get('id');
+
+      if (typeof id !== 'number') throw new Error('Unable to ferch without an id');
+
+      _this.sync.fetch(id).then(function (response) {
+        _this.set(response.data);
+      });
+    };
+
+    this.save = function () {
+      _this.sync.save(_this.attribute.getAll).then(function (response) {
+        _this.trigger('save');
+      }).catch(function (error) {
+        throw new Error("facing " + error.message);
+      });
+    };
+
     this.attribute = new Attribute_1.Attribute(userProps);
   }
 
@@ -2050,14 +2084,13 @@ Object.defineProperty(exports, "__esModule", {
 var User_1 = require("./models/User");
 
 var user = new User_1.User({
-  name: 'Aman',
-  age: 22
+  id: 1,
+  name: 'new Name'
 });
-console.log(user.get('name'));
-user.on('change', function () {
-  console.log('name changed');
+user.on('save', function () {
+  console.log('saved');
 });
-user.trigger('change');
+user.save();
 },{"./models/User":"src/models/User.ts"}],"C:/Users/dashr/AppData/Local/Yarn/Data/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -2086,7 +2119,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60572" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61097" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
