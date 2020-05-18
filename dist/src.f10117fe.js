@@ -117,7 +117,91 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"src/models/Model.ts":[function(require,module,exports) {
+})({"src/views/UserForm.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.UserForm = void 0;
+
+var UserForm =
+/** @class */
+function () {
+  function UserForm(parent, model) {
+    var _this = this;
+
+    this.parent = parent;
+    this.model = model;
+
+    this.renderOnChange = function () {
+      _this.model.on('change', function () {
+        _this.render();
+      });
+    };
+
+    this.eventMap = function () {
+      return {
+        'click:.set-age': _this.onSetAge,
+        'click:.set-name': _this.onSetName
+      };
+    };
+
+    this.onSetAge = function () {
+      _this.model.setRandomAge();
+    };
+
+    this.onSetName = function () {
+      var input = _this.parent.querySelector('input');
+
+      if (input) {
+        var name = input.value;
+        if (name) _this.model.set({
+          name: name
+        });
+      }
+    };
+
+    this.template = function () {
+      return "\n      <div>\n        <h1>User Form </h1>\n        <h1>Name: " + _this.model.get('name') + " </h1>\n        <h1>Age: " + _this.model.get('age') + " </h1>\n        <input type=\"text\"/>\n        <button class=\"set-name\">Set Name</button>\n        <button class=\"set-age\">Random age</button>\n      </div>\n    \n    ";
+    };
+
+    this.bindEvents = function (fragment) {
+      var events = _this.eventMap();
+
+      var _loop_1 = function _loop_1(eventKey) {
+        var _a = eventKey.split(':'),
+            event = _a[0],
+            selector = _a[1];
+
+        fragment.querySelectorAll(selector).forEach(function (element) {
+          element.addEventListener(event, events[eventKey]);
+        });
+      };
+
+      for (var eventKey in events) {
+        _loop_1(eventKey);
+      }
+    };
+
+    this.render = function () {
+      _this.parent.innerHTML = '';
+      var template = document.createElement('template');
+      template.innerHTML = _this.template();
+
+      _this.bindEvents(template.content);
+
+      _this.parent.append(template.content);
+    };
+
+    this.renderOnChange();
+  }
+
+  return UserForm;
+}();
+
+exports.UserForm = UserForm;
+},{}],"src/models/Model.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -177,6 +261,13 @@ function () {
   Object.defineProperty(Model.prototype, "get", {
     get: function get() {
       return this.attributes.get;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(Model.prototype, "getAll", {
+    get: function get() {
+      return this.attributes.getAll;
     },
     enumerable: false,
     configurable: true
@@ -2029,6 +2120,22 @@ exports.ApiSync = ApiSync;
 },{"axios":"node_modules/axios/index.js"}],"src/models/Attribute.ts":[function(require,module,exports) {
 "use strict"; // import { UserProps } from './User';
 
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -2047,7 +2154,7 @@ function () {
     };
 
     this.set = function (update) {
-      Object.assign(_this.data, update);
+      _this.data = __assign(__assign({}, _this.data), update); // Object.assign(this.data, update);
     };
   }
 
@@ -2177,7 +2284,17 @@ function (_super) {
   __extends(User, _super);
 
   function User() {
-    return _super !== null && _super.apply(this, arguments) || this;
+    var _this = _super !== null && _super.apply(this, arguments) || this;
+
+    _this.setRandomAge = function () {
+      var age = Math.round(Math.random() * 100);
+
+      _this.set({
+        age: age
+      });
+    };
+
+    return _this;
   }
 
   User.buildUser = function (attrs) {
@@ -2201,14 +2318,22 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var UserForm_1 = require("./views/UserForm");
+
 var User_1 = require("./models/User");
 
-var collection = User_1.User.buildUserCollection();
-collection.fetch();
-collection.on('change', function () {
-  console.log(collection);
-});
-},{"./models/User":"src/models/User.ts"}],"C:/Users/dashr/AppData/Local/Yarn/Data/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+var root = document.getElementById('root');
+
+if (root) {
+  var form = new UserForm_1.UserForm(root, User_1.User.buildUser({
+    name: 'Rakesh',
+    age: 23
+  }));
+  form.render();
+} else {
+  throw new Error('Cannot find div with id root');
+}
+},{"./views/UserForm":"src/views/UserForm.ts","./models/User":"src/models/User.ts"}],"C:/Users/dashr/AppData/Local/Yarn/Data/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -2236,7 +2361,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64954" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52539" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

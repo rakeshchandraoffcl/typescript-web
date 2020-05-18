@@ -1,8 +1,14 @@
+import { UserForm } from './views/UserForm';
 import { User } from './models/User';
 
-const collection = User.buildUserCollection();
-collection.fetch();
+const root = document.getElementById('root');
 
-collection.on('change', () => {
-    console.log(collection);
-});
+if (root) {
+    const form = new UserForm(
+        root,
+        User.buildUser({ name: 'Rakesh', age: 23 })
+    );
+    form.render();
+} else {
+    throw new Error('Cannot find div with id root');
+}

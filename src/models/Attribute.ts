@@ -12,7 +12,8 @@ export class Attribute<T> {
     };
 
     set = (update: T) => {
-        Object.assign(this.data, update);
+        this.data = { ...this.data, ...update };
+        // Object.assign(this.data, update);
     };
 }
 
